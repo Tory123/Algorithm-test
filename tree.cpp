@@ -7,7 +7,7 @@
 //
 
 #include <iostream>
-#include "Stack.cpp"
+#include "Stack.h"
 #define BinNodePosi BinNode*
 #define stature(p) ((p)?(p)->height:-1)
 using namespace std;
@@ -16,7 +16,9 @@ using namespace std;
 
 class BinNode{
 public :
-    BinNodePosi parent;BinNodePosi lchild;BinNodePosi rchild;
+    BinNodePosi parent;
+    BinNodePosi lchild;
+    BinNodePosi rchild;
     int data, height;
     BinNodePosi insertAsLC(int n){
         return lchild = new BinNode(n,this);
@@ -82,15 +84,27 @@ void travPre(BinNodePosi p){
  二叉树迭代先序遍历
  T(n) = O(1)+T(a)+T(n-a-1),解得T(n)=O(n)
  */
+void travPre_I(BinNodePosi p){
+    Stack<BinNodePosi> S;
+    if(p)S.push(p);
+    while(S.size!=0){
+        BinNodePosi T = S.pop();
+        cout << T->data;
+        if(T->rchild)S.push(T->rchild);
+        if(T->lchild)S.push(T->lchild);
+    }
+}
 
 int main(int argc, const char * argv[]) {
     
     BinNode *root = new BinNode(5,NULL);
+    BinNode *l = new BinNode(4,NULL);
+    root->lchild = l;
     root->insertAsLR(3);
-    root->insertAsLC(4);
+    l->insertAsLC(6);
     BinTree * tree = new BinTree();
     tree->updateHeight(root);
-    travPre(root);
+    travPre_I(root);
    // cout << root->height <<endl;
     return 0;
 }

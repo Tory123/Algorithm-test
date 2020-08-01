@@ -87,7 +87,7 @@ public:
     void push(T e){
         size<100?stack[size++]=e: NULL;
     }
-    float pop(){
+    T pop(){
         
         return stack[--size];
     }
