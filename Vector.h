@@ -18,10 +18,9 @@ private:
     Rank _size; int Capacity; T* _elem; //_size为有效数据
 protected:
     void copyFrom ( T const* A, Rank lo, Rank hi ){  //复制数组区间A[lo, hi)
-       _elem = new T[Capacity = 2*(hi-lo) ];
-       _size = 0;
-       while(lo<hi)
-           _elem[_size++] = A[lo++];
+      int n  = hi - lo;
+      _elem = new T[_Capacity= 2*(hi - lo)];
+      for(_size = 0;_size<n;_elem[_size++]=A[lo++]);
     }
     void expand(){  //空间不足时扩容
         /*  容量加倍策略
@@ -42,10 +41,12 @@ protected:
            }
            delete []oldElem;
     }
-    T remove (Rank lo, Rank hi){ //区间删除
+    
+    T remove (Rank lo, Rank hi){ //区间删除,范围[lo,hi)
         while(hi<_size)
             _elem[lo++] = _elem[hi++];
         _size = lo;
+             
         return hi - lo;
     }
     T remove (Rank n){ //单元素删除,通过区间删除接口来实现
@@ -53,7 +54,8 @@ protected:
         remove(n,n+1);
         return e;
     }
-    T find(T const& e,Rank lo,Rank hi){ //输入敏感
+    //约定：取出向量中元素值为e的最靠后的元素，无序向量查找为”输入敏感“的算法
+    Rank find(T const& e,Rank lo,Rank hi){
         while (lo < hi--&&e!=_elem[hi]) ;
         return hi;
     }
@@ -76,11 +78,15 @@ public:  //构造函数和析构函数
      */
     int deduplicate(){
         int oldSize = _size;
-        Rank i = 1;
+        for(Rank i = 1;i<_size;){
+            if (find(_elem[i],0,i)>-1) remove(i);
+            else i++ ;
+        }
+        /*
         while ( i< _size)
             (find(_elem[i],0,i)<0)?i++:remove(i);
+         */
         return oldSize - _size;
-        
     }
     //返回逆序对总数,返回的值是0说明向量有序
     int disordered(){
@@ -96,5 +102,20 @@ public:  //构造函数和析构函数
             if(_elem[j]!=_elem[i])_elem[++i]=_elem[j];
         _size = ++i;
         return j-i;
+        /*
+         int oldSize = _size;
+         Rank i = 0,j=1;
+         while (j<_size) {
+            int n = _elem[i];int k = _elem[j];
+            if (_elem[j]!=_elem[i]){ _elem[++i] = _elem[j] ; j++ ; }
+            else j++;
+         }
+        _size = i + 1;
+        return oldSize - _size;
+         */
     }
 };
+int main (){
+    
+    
+}

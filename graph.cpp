@@ -17,7 +17,7 @@ class Graph{
     void reset(){
         //所有顶点，边的辅助信息复位
         for(int i=0;i<n;i++){
-            
+            status(i) = UNDISCOVERED;
         }
     }
 };
@@ -34,15 +34,24 @@ Vertex(T const&e):data(e),inDegree(0),outDegree(0),status(UNDISCOVERED),dtime(-1
 };
 typedef enum{UNDETERMINED,TREE,CROSS,FORWARD,BACKWARD} EStatus;
 template <typename T>
-struct edge{
+struct Edge{
     T data;
     int weight;  //权重
     EStatus status;
-    edge(T const&  e,int w):data(e),weight(w),status(UNDETERMINED){}
+    Edge(T const&  e,int w):data(e),weight(w),status(UNDETERMINED){}
 };
 template<typename T>
 class GraphMatrix : public Graph{
-    
+private:
+    Vector<Vertex<Tv>> V;  //顶点集
+    Vector<Edge<Te>*> E;  //边集
+public:
+    GraphMatrix(){n=e=0};
+    ~GraphMatrix(){
+        for (int i=0; i<n; i++)
+            for (int j=0; j<n; j++)
+                delete E[j][k];
+    }
 };
 int main()
 {
